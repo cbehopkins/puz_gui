@@ -11,20 +11,24 @@ import (
 )
 
 func RunCountdown(target int, sources []int) string {
+	if false {
+		found_values := cntSlv.NewNumMap()
+		//found_values.SelfTest = true
+		found_values.UseMult = true
+		found_values.PermuteMode = cntSlv.FastMap
+		found_values.SeekShort = false // TBD make this controllable
 
-	found_values := cnt_slv.NewNumMap()
-	//found_values.SelfTest = true
-	found_values.UseMult = true
-	found_values.PermuteMode = cnt_slv.LonMap
-	found_values.SeekShort = false // TBD make this controllable
-
-	fmt.Println("Starting permute")
-	return_proofs := found_values.CountHelper(target, sources)
-	for _ = range return_proofs {
-		//fmt.Println("Proof Received", v)
+		fmt.Println("Starting permute")
+		return_proofs := found_values.CountHelper(target, sources)
+		for _ = range return_proofs {
+			//fmt.Println("Proof Received", v)
+		}
+		//fmt.Println("Permute Complete", proof_list)
+		return found_values.GetProof(target)
+	} else {
+		findShortest := false
+		return cntSlv.CountFastHelper(target, sources, findShortest)
 	}
-	//fmt.Println("Permute Complete", proof_list)
-	return found_values.GetProof(target)
 }
 
 type countdownProcessHandler struct {

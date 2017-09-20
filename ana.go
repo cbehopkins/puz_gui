@@ -34,7 +34,7 @@ func (h *anaProcessHandler) HandleEvent(e gwu.Event) {
 		refString := h.input.Text()
 		refString = strings.Replace(refString, "\n", "", -1)
 		fmt.Println("Received String", refString)
-		resultChan := ana.AnaHelper(filename, refString, 4)
+		resultChan := ana.Helper(filename, refString, 4)
 		results := make(results, 0)
 		for res := range resultChan {
 			fmt.Println("Received Result", res)
