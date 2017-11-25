@@ -1,4 +1,4 @@
-package puz_gui
+package puzGui
 
 import (
 	"fmt"
@@ -60,6 +60,9 @@ func (h *anaClearHandler) HandleEvent(e gwu.Event) {
 		e.MarkDirty(h.output)
 	}
 }
+
+// AnaWindow creates the window object that
+// all the anagram if resides in
 func AnaWindow() gwu.Window {
 
 	win := gwu.NewWindow("ana", "Anagram")

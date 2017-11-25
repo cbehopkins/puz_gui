@@ -1,4 +1,4 @@
-package puz_gui
+package puzGui
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ func RunCountdown(target int, sources []int) string {
 
 		fmt.Println("Starting permute")
 		return_proofs := found_values.CountHelper(target, sources)
-		for _ = range return_proofs {
+		for range return_proofs {
 			//fmt.Println("Proof Received", v)
 		}
 		//fmt.Println("Permute Complete", proof_list)

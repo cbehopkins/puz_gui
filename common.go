@@ -1,4 +1,4 @@
-package puz_gui
+package puzGui
 
 import (
 	"errors"

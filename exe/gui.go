@@ -11,10 +11,10 @@ import (
 
 func buildWin(s gwu.Session) {
 	// Create and build a window
-	boggleWin := puz_gui.BoggleWindow()
-	sudokuWin := puz_gui.SudokuWindow()
-	countdownWin := puz_gui.CountdownWindow()
-	anaWin := puz_gui.AnaWindow()
+	boggleWin := puzGui.BoggleWindow()
+	sudokuWin := puzGui.SudokuWindow()
+	countdownWin := puzGui.CountdownWindow()
+	anaWin := puzGui.AnaWindow()
 	s.AddWin(boggleWin)
 	s.AddWin(sudokuWin)
 	s.AddWin(countdownWin)
@@ -77,8 +77,6 @@ func serverString(local bool) string {
 func main() {
 	localServer := false
 
-	//puz_gui.RunCountdown (10, []int{1,5,9,1} )
-	// os.Exit(0)
 	// Create and start a GUI server (omitting error check)
 	server := gwu.NewServer("", serverString(localServer))
 	server.SetLogger(log.New(os.Stdout, "", log.Lshortfile))
@@ -86,10 +84,10 @@ func main() {
 
 	if localServer {
 		// Create and build a window
-		boggleWin := puz_gui.BoggleWindow()
-		sudokuWin := puz_gui.SudokuWindow()
-		countdownWin := puz_gui.CountdownWindow()
-		anaWin := puz_gui.AnaWindow()
+		boggleWin := puzGui.BoggleWindow()
+		sudokuWin := puzGui.SudokuWindow()
+		countdownWin := puzGui.CountdownWindow()
+		anaWin := puzGui.AnaWindow()
 		//
 		server.AddWin(boggleWin)
 		server.AddWin(sudokuWin)
