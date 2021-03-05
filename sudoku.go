@@ -1,4 +1,4 @@
-package puzGui
+package puzgui
 
 import (
 	"log"
@@ -41,15 +41,14 @@ func runSudoku(input [][]int) (output [][]int, testPuzzle *sod.Puzzle) {
 	if result != nil {
 		// TBD return error
 		return
-	} else {
-		for x := 0; x < size; x++ {
-			for y := 0; y < size; y++ {
-				vals := testPuzzle.GetCel(sod.Coord{x, y}).Values()
-				if len(vals) == 1 {
-					val := int(vals[0])
-					if val != 0 {
-						output[y][x] = val
-					}
+	}
+	for x := 0; x < size; x++ {
+		for y := 0; y < size; y++ {
+			vals := testPuzzle.GetCel(sod.Coord{x, y}).Values()
+			if len(vals) == 1 {
+				val := int(vals[0])
+				if val != 0 {
+					output[y][x] = val
 				}
 			}
 		}
@@ -75,7 +74,7 @@ func (h *sudokuProcessHandler) HandleEvent(e gwu.Event) {
 		}
 		for x := 0; x < h.size; x++ {
 			for y := 0; y < h.size; y++ {
-				tt, err := Gt(x, y, h.table)
+				tt, err := gt(x, y, h.table)
 
 				if err != nil {
 					success = false
@@ -83,7 +82,7 @@ func (h *sudokuProcessHandler) HandleEvent(e gwu.Event) {
 					if tt == "" {
 						// This is okay, blank input cells are fine
 					} else {
-						val, ok := IsCNum(tt, h.size)
+						val, ok := isCNum(tt, h.size)
 						if ok {
 							intArray[y][x] = val // need to invert here annoyingly
 						} else {
@@ -98,7 +97,7 @@ func (h *sudokuProcessHandler) HandleEvent(e gwu.Event) {
 		} else {
 			resultInt, resultPuz := runSudoku(intArray)
 			size := h.size
-			set_func_result := func(x, y int) string {
+			funcResult := func(x, y int) string {
 				var txt string
 				val := resultInt[y][x]
 				if (val > 0) && (val <= size) {
@@ -106,7 +105,7 @@ func (h *sudokuProcessHandler) HandleEvent(e gwu.Event) {
 				}
 				return txt
 			}
-			set_func_partial := func(x, y int) string {
+			funcPartial := func(x, y int) string {
 				vals := resultPuz.GetCel(sod.Coord{x, y}).Values()
 				txt := ""
 				for _, val := range vals {
@@ -115,8 +114,8 @@ func (h *sudokuProcessHandler) HandleEvent(e gwu.Event) {
 				return txt
 			}
 
-			StTableVals(h.size, h.resultTable, e, set_func_result)
-			StTableVals(h.size, h.partialTable, e, set_func_partial)
+			stTableVals(h.size, h.resultTable, e, funcResult)
+			stTableVals(h.size, h.partialTable, e, funcPartial)
 		}
 	}
 }
@@ -129,12 +128,14 @@ type sudokuClearHandler struct {
 
 func (h *sudokuClearHandler) HandleEvent(e gwu.Event) {
 	if _, isButton := e.Src().(gwu.Button); isButton {
-		set_func := func(x, y int) string {
+		fc := func(x, y int) string {
 			return ""
 		}
-		StTableVals(h.size, h.resultTable, e, set_func)
+		stTableVals(h.size, h.resultTable, e, fc)
 	}
 }
+
+// SudokuWindow Return gui window element
 func SudokuWindow() gwu.Window {
 
 	size := 9

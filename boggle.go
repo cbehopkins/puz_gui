@@ -1,4 +1,4 @@
-package puzGui
+package puzgui
 
 import (
 	"github.com/cbehopkins/boggle"
@@ -23,30 +23,30 @@ func (h *boggleProcessHandler) HandleEvent(e gwu.Event) {
 		}
 		// Go through the input table and extract data from it
 		extractFunc := func(x, y int) {
-			fr, err := GtRune(x, y, h.table, alphaRune)
+			fr, err := gtRune(x, y, h.table, alphaRune)
 			if err != nil {
 				success = false
 			} else {
 				ra[x][y] = fr
 			}
 		}
-		TableVals(h.size, h.table, e, extractFunc)
+		tableVals(h.size, h.table, e, extractFunc)
 
 		if !success {
 			txt = ""
 		} else {
-			wrds_found := make(map[string]struct{})
+			wrdsFound := make(map[string]struct{})
 			wrkFunc := func(wrd string) {
-				wrds_found[wrd] = struct{}{}
+				wrdsFound[wrd] = struct{}{}
 			}
 
 			pz := h.dic.NewPuzzle(h.size, ra)
 			pz.StartWorker(wrkFunc)
 			pz.RunWalk()
 			pz.Shutdown()
-			wrd_cnt := len(wrds_found)
-			h.lab.SetRows(wrd_cnt)
-			for wrd := range wrds_found {
+			wrdCnt := len(wrdsFound)
+			h.lab.SetRows(wrdCnt)
+			for wrd := range wrdsFound {
 				txt += wrd + "\n"
 			}
 		}
@@ -66,11 +66,13 @@ func (h *boggleClearHandler) HandleEvent(e gwu.Event) {
 		clearFunc := func(x, y int) string {
 			return ""
 		}
-		StTableVals(h.size, h.table, e, clearFunc)
+		stTableVals(h.size, h.table, e, clearFunc)
 		h.lab.SetText("")
 		e.MarkDirty(h.lab)
 	}
 }
+
+// BoggleWindow Return a window for the boggle gui
 func BoggleWindow() gwu.Window {
 	size := 4
 

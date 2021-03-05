@@ -1,4 +1,4 @@
-package puzGui
+package puzgui
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"github.com/icza/gowut/gwu"
 )
 
-func St(txt string, x, y int, table gwu.Table, e gwu.Event) {
+func st(txt string, x, y int, table gwu.Table, e gwu.Event) {
 	c := table.CompAt(y, x)
 	if c == nil {
 	} else {
@@ -24,34 +24,33 @@ func St(txt string, x, y int, table gwu.Table, e gwu.Event) {
 	}
 }
 
-func Gt(x, y int, table gwu.Table) (string, error) {
+func gt(x, y int, table gwu.Table) (string, error) {
 	c := table.CompAt(y, x)
 	if c == nil {
 		return "", errors.New("Nil component")
-	} else {
-		tbox, isTextBox := c.(gwu.TextBox)
-		if isTextBox {
-			tt := tbox.Text()
-			return tt, nil
-		} else {
-			return "", errors.New("Unknown box type")
-		}
 	}
+	tbox, isTextBox := c.(gwu.TextBox)
+	if isTextBox {
+		tt := tbox.Text()
+		return tt, nil
+	}
+
+	return "", errors.New("Unknown box type")
+
 }
-func GtRune(x, y int, table gwu.Table, rt runeType) (rune, error) {
+
+func gtRune(x, y int, table gwu.Table, rt runeType) (rune, error) {
 	var tr rune
 	var ok bool
-	tt, err := Gt(x, y, table)
+	tt, err := gt(x, y, table)
 	if err != nil {
 		return tr, err
-	} else {
-		tr, ok = IsERune(tt, rt)
-		if ok {
-			return tr, nil
-		} else {
-			return tr, errors.New("Not a rune")
-		}
 	}
+	tr, ok = isERune(tt, rt)
+	if ok {
+		return tr, nil
+	}
+	return tr, errors.New("Not a rune")
 }
 
 func linkTb(prev, current gwu.TextBox) {
@@ -75,10 +74,10 @@ func linkTable(table gwu.Table) {
 		}
 		return true // mark dirty
 	}
-	TableUVals(table, nil, fun)
+	tableUVals(table, nil, fun)
 }
 
-func TableUVals(table gwu.Table, e gwu.Event, fc func(x, y int) bool) {
+func tableUVals(table gwu.Table, e gwu.Event, fc func(x, y int) bool) {
 	run := true
 	for y := 0; run; y++ {
 		c := table.CompAt(y, 0)
@@ -102,41 +101,37 @@ func TableUVals(table gwu.Table, e gwu.Event, fc func(x, y int) bool) {
 	}
 
 }
-func StTableUVals(table gwu.Table, e gwu.Event, set_func func(int, int) string) {
+func stTableUVals(table gwu.Table, e gwu.Event, setFunc func(int, int) string) {
 	fun := func(x, y int) bool {
-		txt := set_func(x, y)
-		St(txt, x, y, table, e)
+		txt := setFunc(x, y)
+		st(txt, x, y, table, e)
 		return false
 	}
-	TableUVals(table, e, fun)
+	tableUVals(table, e, fun)
 }
-func TableVals(size int, table gwu.Table, e gwu.Event, fc func(x, y int)) {
+func tableVals(size int, table gwu.Table, e gwu.Event, fc func(x, y int)) {
 	for x := 0; x < size; x++ {
 		for y := 0; y < size; y++ {
 			fc(x, y)
 		}
 	}
 }
-func StTableVals(size int, table gwu.Table, e gwu.Event, set_func func(int, int) string) {
+func stTableVals(size int, table gwu.Table, e gwu.Event, fc func(int, int) string) {
 	fun := func(x, y int) {
-		txt := set_func(x, y)
-		St(txt, x, y, table, e)
+		txt := fc(x, y)
+		st(txt, x, y, table, e)
 	}
-	TableVals(size, table, e, fun)
+	tableVals(size, table, e, fun)
 }
 
-func IsCNum(str string, size int) (val int, success bool) {
+func isCNum(str string, size int) (val int, success bool) {
 	i, err := strconv.Atoi(str)
 	if err == nil {
 		if (i > 0) && (i <= size) {
 			return i, true
-		} else {
-			return
 		}
-	} else {
-		return
 	}
-
+	return
 }
 
 type runeType int
@@ -164,15 +159,15 @@ func checkRune(r rune, rt runeType) bool {
 	return false
 }
 
-func IsERune(s string, rt runeType) (rune, bool) {
-	found_char := false
+func isERune(s string, rt runeType) (rune, bool) {
+	foundChar := false
 	var fr rune
 	var nv rune
 	for _, r := range s {
-		if found_char {
+		if foundChar {
 			return nv, false
 		}
-		found_char = true
+		foundChar = true
 		if checkRune(r, rt) {
 			fr = r
 		} else {

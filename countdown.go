@@ -1,34 +1,31 @@
-package puzGui
+package puzgui
 
 import (
 	"fmt"
 	"log"
 	"strconv"
 
-	"github.com/cbehopkins/countdown/cnt_slv"
+	cntslv "github.com/cbehopkins/countdown/cnt_slv"
 
 	"github.com/icza/gowut/gwu"
 )
 
+// RunCountdown give a target number and available numbers
+// return the solution as a string
 func RunCountdown(target int, sources []int) string {
-	if false {
-		found_values := cntSlv.NewNumMap()
-		//found_values.SelfTest = true
-		found_values.UseMult = true
-		found_values.PermuteMode = cntSlv.FastMap
-		found_values.SeekShort = false // TBD make this controllable
+	foundValues := cntslv.NewNumMap()
+	//found_values.SelfTest = true
+	foundValues.UseMult = true
+	foundValues.PermuteMode = cntslv.LonMap
+	foundValues.SeekShort = false // TBD make this controllable
 
-		fmt.Println("Starting permute")
-		return_proofs := found_values.CountHelper(target, sources)
-		for range return_proofs {
-			//fmt.Println("Proof Received", v)
-		}
-		//fmt.Println("Permute Complete", proof_list)
-		return found_values.GetProof(target)
-	} else {
-		findShortest := false
-		return cntSlv.CountFastHelper(target, sources, findShortest)
+	fmt.Println("Starting permute")
+	returnProofs := foundValues.CountHelper(target, sources)
+	for range returnProofs {
+		//fmt.Println("Proof Received", v)
 	}
+	//fmt.Println("Permute Complete", proof_list)
+	return foundValues.GetProof(target)
 }
 
 type countdownProcessHandler struct {
@@ -48,7 +45,7 @@ func (h *countdownProcessHandler) HandleEvent(e gwu.Event) {
 		// Go through the input table and extract data from it
 		extractFunc := func(x, y int) bool {
 			fmt.Println("Cd access", x, y)
-			str, err := Gt(x, y, h.table)
+			str, err := gt(x, y, h.table)
 			if err != nil {
 				txt += "Unable to get data from cell:" + strconv.Itoa(x) + "," + strconv.Itoa(y) + "\n"
 				success = false
@@ -67,7 +64,7 @@ func (h *countdownProcessHandler) HandleEvent(e gwu.Event) {
 			}
 			return false
 		}
-		TableUVals(h.table, e, extractFunc)
+		tableUVals(h.table, e, extractFunc)
 		targetVal, err := strconv.Atoi(h.target.Text())
 		if err != nil {
 			success = false
@@ -76,7 +73,6 @@ func (h *countdownProcessHandler) HandleEvent(e gwu.Event) {
 		if !success {
 			txt += "Failure to extract data from table"
 		} else {
-			//txt = "Result of countdown:\n"
 			txt += RunCountdown(targetVal, ra)
 
 		}
@@ -97,13 +93,15 @@ func (h *countdownClearHandler) HandleEvent(e gwu.Event) {
 		clearFunc := func(x, y int) string {
 			return ""
 		}
-		StTableUVals(h.table, e, clearFunc)
+		stTableUVals(h.table, e, clearFunc)
 		h.lab.SetText("")
 		h.target.SetText("")
 		e.MarkDirty(h.lab)
 		e.MarkDirty(h.target)
 	}
 }
+
+// CountdownWindow return gui window for countdown puzzle
 func CountdownWindow() gwu.Window {
 	size := 6
 

@@ -5,16 +5,16 @@ import (
 	"net"
 	"os"
 
-	"github.com/cbehopkins/puz_gui"
+	puzgui "github.com/cbehopkins/puz_gui"
 	"github.com/icza/gowut/gwu"
 )
 
 func buildWin(s gwu.Session) {
 	// Create and build a window
-	boggleWin := puzGui.BoggleWindow()
-	sudokuWin := puzGui.SudokuWindow()
-	countdownWin := puzGui.CountdownWindow()
-	anaWin := puzGui.AnaWindow()
+	boggleWin := puzgui.BoggleWindow()
+	sudokuWin := puzgui.SudokuWindow()
+	countdownWin := puzgui.CountdownWindow()
+	anaWin := puzgui.AnaWindow()
 	s.AddWin(boggleWin)
 	s.AddWin(sudokuWin)
 	s.AddWin(countdownWin)
@@ -84,10 +84,10 @@ func main() {
 
 	if localServer {
 		// Create and build a window
-		boggleWin := puzGui.BoggleWindow()
-		sudokuWin := puzGui.SudokuWindow()
-		countdownWin := puzGui.CountdownWindow()
-		anaWin := puzGui.AnaWindow()
+		boggleWin := puzgui.BoggleWindow()
+		sudokuWin := puzgui.SudokuWindow()
+		countdownWin := puzgui.CountdownWindow()
+		anaWin := puzgui.AnaWindow()
 		//
 		server.AddWin(boggleWin)
 		server.AddWin(sudokuWin)

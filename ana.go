@@ -1,11 +1,11 @@
-package puzGui
+package puzgui
 
 import (
 	"fmt"
-	"sort"
-	"strings"
 
 	"github.com/cbehopkins/ana"
+	"github.com/cbehopkins/wordlist"
+
 	"github.com/icza/gowut/gwu"
 )
 
@@ -13,37 +13,18 @@ type anaProcessHandler struct {
 	input  gwu.TextBox
 	output gwu.Label
 }
-type result string
-type results []result
 
-func (a results) Len() int           { return len(a) }
-func (a results) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a results) Less(i, j int) bool { return len(a[i]) < len(a[j]) }
-func (a results) String() string {
-	ret_txt := ""
-	nl := ""
-	for _, v := range a {
-		ret_txt += string(nl) + string(v)
-		nl = "\n"
-	}
-	return ret_txt
-}
 func (h *anaProcessHandler) HandleEvent(e gwu.Event) {
 	if _, isButton := e.Src().(gwu.Button); isButton {
-		filename := "../ana/wordlist.txt"
+		defer e.MarkDirty(h.output)
 		refString := h.input.Text()
-		refString = strings.Replace(refString, "\n", "", -1)
-		fmt.Println("Received String", refString)
-		resultChan := ana.Helper(filename, refString, 4)
-		results := make(results, 0)
-		for res := range resultChan {
-			fmt.Println("Received Result", res)
-			results = append(results, result(res))
+		data, err := wordlist.Asset("data/wordlist.txt")
+		if err != nil {
+			h.output.SetText(fmt.Sprintln("Asset wordlist not found:", err))
+			return
 		}
 
-		sort.Sort(sort.Reverse(results))
-		h.output.SetText(results.String())
-		e.MarkDirty(h.output)
+		h.output.SetText(ana.AnagramWord(refString, data).String())
 	}
 }
 
